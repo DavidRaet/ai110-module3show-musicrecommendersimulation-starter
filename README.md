@@ -31,6 +31,23 @@ You can include a simple diagram or bullet list if helpful.
 
 ---
 
+Streaming platforms like Spotify and YouTube build their recommendation engines through two key input data:
+content features and behavioral features. Content features focus on the metadata for a video or song. This metadata can include something like genres, mood, energy, etc. 
+
+Behavioral features are how the users interact with a platform: listening/watching time, song/video completion, skips, etc. 
+
+These raw signals are then put into a user preference model that leverages matrix factorization. For example (Example includes some hypothetical elements)*, if a user consistently plays genres like Phonk or Dark Mango Psychology, the model encodes a preference for high tuffness and high energy that uses matrix factorization to, at a high level, understand the relationship between the user's and the item's "latent factor."	
+
+
+Once the preferences are modeled, we then hit the ranking stage. Candidate songs or videos are scored based on how well they score with the user's preferences. The system then ranks the "Top K" highest-scoring elements as the final recommendation list.
+
+
+For SakiYomi's design we will focus on...
+such that: 
+  - Song will have the following attributes: id, title, artist, genre, mood, energy, tempo_bpm, valence, danceability, acousticness
+  - UserProfile will have the following attributes: genre_scores, preferred_mood, pref_energy, pref_valence, pref_dancability, and
+  pref_acousticness
+
 ## Getting Started
 
 ### Setup
