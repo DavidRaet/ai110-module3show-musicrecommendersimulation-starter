@@ -21,13 +21,15 @@ class Song:
 @dataclass
 class UserProfile:
     """
-    Represents a user's taste preferences.
-    Required by tests/test_recommender.py
+    Represents a user's taste preferences using weighted genre scores
+    and target audio feature values.
     """
-    favorite_genre: str
-    favorite_mood: str
-    target_energy: float
-    likes_acoustic: bool
+    genre_scores: Dict[str, float]  # {"pop": 4.5, "lofi": 3.2, ...}
+    preferred_mood: Optional[str] = None
+    pref_energy: float = 0.6
+    pref_valence: float = 0.65
+    pref_danceability: float = 0.65
+    pref_acousticness: float = 0.5
 
 class Recommender:
     """
