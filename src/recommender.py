@@ -108,15 +108,18 @@ def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tup
     Functional implementation of the recommendation logic.
     Required by src/main.py
 
-    user_prefs keys: "genre" (str), "mood" (str, optional), "energy" (float, optional)
+    user_prefs keys: "genre" (str), "preferred_mood" (str, optional), "pref_energy" (float, optional)
     Returns a list of (song_dict, score, explanation) tuples sorted by score descending.
     """
     # Build a UserProfile from the simple dict used by main.py
-    genre = user_prefs.get("genre", "")
+    genre = user_prefs.get("genre_scores", "")
     user = UserProfile(
-        genre_scores={genre: 5.0} if genre else {},
-        preferred_mood=user_prefs.get("mood"),
-        pref_energy=user_prefs.get("energy", 0.6),
+        genre_scores=genre if genre else {},
+        preferred_mood=user_prefs.get("preferred_mood"),
+        pref_energy=user_prefs.get("pref_energy", 0.6),
+        pref_valence=user_prefs.get("pref_valence", 0.6),
+        pref_danceability=user_prefs.get("pref_danceability", 0.6),
+        pref_acousticness=user_prefs.get("pref_acousticness", 0.6),
     )
 
     def dict_to_song(d: Dict) -> Song:
