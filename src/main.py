@@ -9,15 +9,12 @@ You will implement the functions in recommender.py:
 - recommend_songs
 """
 
+from typing import Dict, List
+
 from recommender import load_songs, recommend_songs
 
 
-def main() -> None:
-    songs = load_songs("data/songs.csv") 
-
-    # Starter example profile
-    user_prefs = {"genre": "pop", "mood": "happy", "energy": 0.8}
-
+def runRecommender(user_prefs: Dict, songs: List[Dict]) -> None:
     recommendations = recommend_songs(user_prefs, songs, k=5)
 
     print("\nTop recommendations:\n")
@@ -29,6 +26,19 @@ def main() -> None:
         print(f"Because: {explanation}")
         print()
 
+def main() -> None:
+    songs = load_songs("../data/songs.csv")
+    # Starter example profile
+    user_prefsOne = {"genre": "pop", "mood": "happy", "energy": 0.8}
+    user_prefsTwo = {"genre": "rock", "mood": "sad", "energy": 0.3}
+    user_prefsThree = {"genre": "jazz", "mood": "relaxed", "energy": 0.5}
+
+    runRecommender(user_prefsOne, songs)
+    runRecommender(user_prefsTwo, songs)
+    runRecommender(user_prefsThree, songs)
+
 
 if __name__ == "__main__":
     main()
+
+
