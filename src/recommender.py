@@ -70,12 +70,28 @@ class Recommender:
         self.songs = songs
 
     def recommend(self, user: UserProfile, k: int = 5) -> List[Song]:
-        # TODO: Implement recommendation logic
-        return self.songs[:k]
+        topSongs = sorted(self.songs, key=lambda s: score_song(user, s), reverse=True)
+        return topSongs[:k]
 
     def explain_recommendation(self, user: UserProfile, song: Song) -> str:
-        # TODO: Implement explanation logic
-        return "Explanation placeholder"
+        genre_raw = user.genre_scores.get(song.genre, 0.0)
+        mood_matched = user.preferred_mood and song.mood == user.preferred_mood
+
+        def proximity(attr: str, song_val: float, user_val: float) -> str:
+            if abs(song_val - user_val) <= 0.20:
+                return f"The song's {attr} ({song_val:.2f}) score and your preferred {attr} ({user_val:.2f}) score seems to be close"
+            return f"The song's {attr} ({song_val:.2f}) score and your preferred {attr} ({user_val:.2f}) score doesn't seem to match your style"
+
+        parts = [
+            f"Genre ({song.genre}): {genre_raw:.1f}/5",
+            f"Mood ({song.mood}): {'matched' if mood_matched else 'no match'}",
+            proximity("energy", song.energy, user.pref_energy),
+            proximity("valence", song.valence, user.pref_valence),
+            proximity("danceability", song.danceability, user.pref_danceability),
+            proximity("acousticness", song.acousticness, user.pref_acousticness),
+        ]
+        return " | ".join(parts)
+
 
 def load_songs(csv_path: str) -> List[Dict]:
     """
@@ -86,11 +102,44 @@ def load_songs(csv_path: str) -> List[Dict]:
     return df.to_dict(orient='records')
 
 
+
 def recommend_songs(user_prefs: Dict, songs: List[Dict], k: int = 5) -> List[Tuple[Dict, float, str]]:
     """
     Functional implementation of the recommendation logic.
     Required by src/main.py
+
+    user_prefs keys: "genre" (str), "mood" (str, optional), "energy" (float, optional)
+    Returns a list of (song_dict, score, explanation) tuples sorted by score descending.
     """
-    # TODO: Implement scoring and ranking logic
-    # Expected return format: (song_dict, score, explanation)
-    return []
+    # Build a UserProfile from the simple dict used by main.py
+    genre = user_prefs.get("genre", "")
+    user = UserProfile(
+        genre_scores={genre: 5.0} if genre else {},
+        preferred_mood=user_prefs.get("mood"),
+        pref_energy=user_prefs.get("energy", 0.6),
+    )
+
+    def dict_to_song(d: Dict) -> Song:
+        return Song(
+            id=int(d.get("id", 0)),
+            title=str(d.get("title", "")),
+            artist=str(d.get("artist", "")),
+            genre=str(d.get("genre", "")),
+            mood=str(d.get("mood", "")),
+            energy=float(d.get("energy", 0.0)),
+            tempo_bpm=float(d.get("tempo_bpm", 0.0)),
+            valence=float(d.get("valence", 0.0)),
+            danceability=float(d.get("danceability", 0.0)),
+            acousticness=float(d.get("acousticness", 0.0)),
+        )
+
+    rec = Recommender([dict_to_song(d) for d in songs])
+    top_songs = rec.recommend(user, k=k)
+    
+    results = []
+    original_by_id = {int(d.get("id", 0)): d for d in songs}
+    for song in top_songs:
+        sc = score_song(user, song)
+        explanation = rec.explain_recommendation(user, song)
+        results.append((original_by_id[song.id], sc, explanation))
+    return results
