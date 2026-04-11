@@ -1,5 +1,6 @@
 from typing import List, Dict, Tuple, Optional
 from dataclasses import dataclass
+import pandas as pd
 
 @dataclass
 class Song:
@@ -30,6 +31,35 @@ class UserProfile:
     pref_valence: float = 0.65
     pref_danceability: float = 0.65
     pref_acousticness: float = 0.5
+
+
+def score_song(user: UserProfile, song: Song) -> float:
+    """
+    Scores a song against a user profile using a weighted sum of:
+      - Genre preference (40%): how much the user likes this genre (0–5 scale)
+      - Mood match (20%): whether the song's mood matches the user's preferred mood
+      - Energy closeness (10%): how close the song's energy is to the user's target
+      - Valence closeness (10%): how close the song's valence is to the user's target
+      - Danceability closeness (10%): how close the song's danceability is to the user's target
+      - Acousticness closeness (10%): how close the song's acousticness is to the user's target
+
+    Returns a float between 0.0 and 1.0 that is rounded to 4 decimal places.
+    """
+    genre_raw = user.genre_scores.get(song.genre, 0.0)
+    genre_component = (genre_raw / 5.0) * 0.40
+
+    mood_match = 1.0 if (user.preferred_mood and song.mood == user.preferred_mood) else 0.0
+    mood_component = mood_match * 0.20
+
+    energy_component = (1.0 - abs(song.energy - user.pref_energy)) * 0.10
+    valence_component = (1.0 - abs(song.valence - user.pref_valence)) * 0.10
+    dance_component = (1.0 - abs(song.danceability - user.pref_danceability)) * 0.10
+    acoustic_component = (1.0 - abs(song.acousticness - user.pref_acousticness)) * 0.10
+
+    song_score = genre_component + mood_component + energy_component + valence_component + dance_component + acoustic_component
+
+    return round(song_score, 4)
+
 
 class Recommender:
     """
