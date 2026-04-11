@@ -123,6 +123,13 @@ Once the preferences are modeled, we then hit the ranking stage. Candidate songs
 
 
 
+## Screenshots for terminal output 
+
+![3 sample users](image.png)
+
+More detailed analysis is on the evaluation section of the model_card.md file
+
+
 ## 7. `model_card_template.md`
 
 Combines reflection and model card framing from the Module 3 guidance. :contentReference[oaicite:2]{index=2}  
