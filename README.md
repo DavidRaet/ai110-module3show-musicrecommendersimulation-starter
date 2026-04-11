@@ -2,17 +2,7 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
-
+SakiYomi is a content-based music recommendation engine that simulates how real-world platforms like Spotify score and rank songs for users. It uses a weighted scoring system combining genre preferences (40%), mood matching (20%), and audio features like energy, valence, danceability, and acousticness (40%) to generate personalized recommendations from a catalog of 18 diverse songs. The project demonstrates key concepts in recommendation systems, including how data features drive predictions and where bias can emerge—particularly the risk of over-weighting certain attributes while underrepresenting others.
 ---
 
 ## How The System Works
@@ -144,7 +134,7 @@ Combines reflection and model card framing from the Module 3 guidance. :contentR
 
 Give your recommender a name, for example:
 
-> SakiYomi 
+> MusiRec 1.0 
 
 ---
 
