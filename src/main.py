@@ -12,7 +12,7 @@ You will implement the functions in recommender.py:
 from typing import Dict, List
 
 from recommender import load_songs, recommend_songs
-
+from user_preferences import user_preferences
 
 def runRecommender(user_prefs: Dict, songs: List[Dict]) -> None:
     recommendations = recommend_songs(user_prefs, songs, k=5)
@@ -29,9 +29,9 @@ def runRecommender(user_prefs: Dict, songs: List[Dict]) -> None:
 def main() -> None:
     songs = load_songs("../data/songs.csv")
     # Starter example profile
-    user_prefsOne = {"genre": "pop", "mood": "happy", "energy": 0.8}
-    user_prefsTwo = {"genre": "rock", "mood": "sad", "energy": 0.3}
-    user_prefsThree = {"genre": "jazz", "mood": "relaxed", "energy": 0.5}
+    user_prefsOne = user_preferences[1]
+    user_prefsTwo = user_preferences[2]
+    user_prefsThree = user_preferences[3]
 
     runRecommender(user_prefsOne, songs)
     runRecommender(user_prefsTwo, songs)
