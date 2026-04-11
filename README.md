@@ -31,22 +31,12 @@ You can include a simple diagram or bullet list if helpful.
 
 ---
 
-Streaming platforms like Spotify and YouTube build their recommendation engines through two key input data:
-content features and behavioral features. Content features focus on the metadata for a video or song. This metadata can include something like genres, mood, energy, etc. 
-
-Behavioral features are how the users interact with a platform: listening/watching time, song/video completion, skips, etc. 
-
-These raw signals are then put into a user preference model that leverages matrix factorization. For example (Example includes some hypothetical elements)*, if a user consistently plays genres like Phonk or Dark Mango Psychology, the model encodes a preference for high tuffness and high energy that uses matrix factorization to, at a high level, understand the relationship between the user's and the item's "latent factor."	
-
-
-Once the preferences are modeled, we then hit the ranking stage. Candidate songs or videos are scored based on how well they score with the user's preferences. The system then ranks the "Top K" highest-scoring elements as the final recommendation list.
-
-
-For SakiYomi's design we will focus on...
-such that: 
+For SakiYomi's design we will focus on the algorithm such that the top songs are recommended based on genre, and mood is second in that emphasis. 
+The attributes  are listed as follows: 
   - Song will have the following attributes: id, title, artist, genre, mood, energy, tempo_bpm, valence, danceability, acousticness
   - UserProfile will have the following attributes: genre_scores, preferred_mood, pref_energy, pref_valence, pref_dancability, and
   pref_acousticness
+  - Recommender will compute a score in this fashion: genre on a one to 5 scale, the mood will be a boolean: mood matches or not, the rest of the attributes in a 0-1.0 scale. 
 
 ## Getting Started
 
@@ -93,6 +83,10 @@ Use this section to document the experiments you ran. For example:
 
 ---
 
+To test my recommender, I ran through many variations of genre and mood changes. For example, I had a test user who had a preference for rock and high energy. So,
+whenever a rock song and high energy song was matched, naturally that would bring the song into the top recommendations. However, because the genre is highly weighed
+in this algorithm, the genre may match but may not match the user's preferred energy. 
+
 ## Limitations and Risks
 
 Summarize some limitations of your recommender.
@@ -106,6 +100,11 @@ Examples:
 You will go deeper on this in your model card.
 
 ---
+
+Because this algorithm is heavily weighed on the genre, there may be a concern that the user decides that the mood might be more important 
+than the genre. 
+
+Additionally, sticking to genre would not accommodate for users more invested in attributes other than genres. 
 
 ## Reflection
 
@@ -121,6 +120,19 @@ Write 1 to 2 paragraphs here about what you learned:
 
 ---
 
+Streaming platforms like Spotify and YouTube build their recommendation engines through two key input data:
+content features and behavioral features. Content features focus on the metadata for a video or song. This metadata can include something like genres, mood, energy, etc. 
+
+Behavioral features are how the users interact with a platform: listening/watching time, song/video completion, skips, etc. 
+
+These raw signals are then put into a user preference model that leverages matrix factorization. For example (Example includes some hypothetical elements)*, if a user consistently plays genres like Phonk or Dark Mango Psychology, the model encodes a preference for high tuffness and high energy that uses matrix factorization to, at a high level, understand the relationship between the user's and the item's "latent factor."	
+
+
+Once the preferences are modeled, we then hit the ranking stage. Candidate songs or videos are scored based on how well they score with the user's preferences. The system then ranks the "Top K" highest-scoring elements as the final recommendation list.
+
+
+
+
 ## 7. `model_card_template.md`
 
 Combines reflection and model card framing from the Module 3 guidance. :contentReference[oaicite:2]{index=2}  
@@ -132,7 +144,7 @@ Combines reflection and model card framing from the Module 3 guidance. :contentR
 
 Give your recommender a name, for example:
 
-> VibeFinder 1.0
+> SakiYomi 
 
 ---
 
